@@ -54,74 +54,18 @@ namespace Lab_6
             GetIntensity(I);
             Matrix E = new Matrix(new float[1, 4] { { 0, 0, -1, 0 } });
             Matrix EV = E * V;
-
             for (int j = 0; j < 6; ++j)
             {
                 if (EV[0, j] < 0)
                     continue;
-                PointF A = new PointF(vertecies[indicies2[j][0]][0, 0], vertecies[indicies2[j][0]][0, 1]);
-                PointF B = new PointF(vertecies[indicies2[j][1]][0, 0], vertecies[indicies2[j][1]][0, 1]);
-                PointF C = new PointF(vertecies[indicies2[j][2]][0, 0], vertecies[indicies2[j][2]][0, 1]);
-                PointF D = new PointF(vertecies[indicies2[j][3]][0, 0], vertecies[indicies2[j][3]][0, 1]);
-
-                PointF up = A;
-                if (up.Y > B.Y)
-                    up = B;
-                if (up.Y > C.Y)
-                    up = C;
-                if (up.Y > D.Y)
-                    up = D;
-
-                PointF down = A;
-                if (down.Y < B.Y)
-                    down = B;
-                if (down.Y < C.Y)
-                    down = C;
-                if (down.Y < D.Y)
-                    down = D;
-
-                PointF left = A;
-                if (left.X > B.X)
-                    left = B;
-                if (left.X > C.X)
-                    left = C;
-                if (left.X > D.X)
-                    left = D;
-
-                PointF right = A;
-                if (right.X < B.X)
-                    right = B;
-                if (right.X < C.X)
-                    right = C;
-                if (right.X < D.X)
-                    right = D;
-
-                float Kup = (left.Y - up.Y) / (left.X - up.X);
-                float Bup = -(up.X * left.Y - left.X * up.Y) / (left.X - up.X);
-
-                float Kleft = (down.Y - left.Y) / (down.X - left.X);
-                float Bleft = -(left.X * down.Y - down.X * left.Y) / (down.X - left.X);
-
-                float Kdown = (right.Y - down.Y) / (right.X - down.X);
-                float Bdown = -(down.X * right.Y - right.X * down.Y) / (right.X - down.X);
-
-                float Kright = (up.Y - right.Y) / (up.X - right.X);
-                float Bright = -(right.X * up.Y - up.X * right.Y) / (up.X - right.X);
-
-                for (float k = up.Y; k <= down.Y; ++k)
+                GraphicsPath graphPath = new GraphicsPath();
+                for (int i = 0; i < 7; ++i)
                 {
-                    for (float i = left.X; i <= right.X; ++i)
-                    {
-                        if ((Kup * i + Bup - k <= 0) &&
-                            (Kleft * i + Bleft - k >= 0) &&
-                            (Kdown * i + Bdown - k >= 0) &&
-                            (Kright * i + Bright - k <= 0))
-                        {
-                            ((Bitmap)pictureBox1.Image).SetPixel((int)(i + 120), (int)(k + 130), Color.FromArgb((int)Intensities[j], 0, 0));
-                            continue;
-                        }
-                    }
+                    graphPath.AddLine(vertecies[indicies[j, i]][0, 0], vertecies[indicies[j, i]][0, 1],
+                        vertecies[indicies[j, i + 1]][0, 0], vertecies[indicies[j, i + 1]][0, 1]);
                 }
+                graphics.FillPath(new SolidBrush(Color.FromArgb((int)Intensities[j], 0, 0)), graphPath);
+                graphPath.Dispose();
             }
         }
 
